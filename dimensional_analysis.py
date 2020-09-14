@@ -11,33 +11,31 @@ def check_dimensionality(equation, units_reference):
     Args:
         equation (str)
         units_reference (dict): map of symbols (str) to units (str)
-
+        
     Returns:
         tuple of unit (str), degree (int or float)
     """
     equation = equation.replace('^', '**')
     units_map = {k: ureg[v or ""] for k, v in units_reference.items()}
-    units_map.update({'sqrt': np.sqrt, 'cbrt': np.cbrt})
-    
+    units_map.update({'sqrt': np.sqrt,
+                      'cbrt': np.cbrt, 
+                      'log': np.log,
+                      'exp': np.exp,})
     try:
         #  isolated from global and local variables
-        y = eval(equation, {'__builtins__':None}, units_map)
+        y = eval(equation, {'__builtins__': {}}, units_map)
 
         if isinstance(y, float):
             return 'dimensionless', 0
         elif y.dimensionless:
             return 'dimensionless', 0
         else:
-            
             unit, degree = list(y.units.dimensionality.items()).pop()
             if np.isclose(np.round(degree), degree):
                 return unit, int(degree)
             else:
                 return unit, degree
     except DimensionalityError:
-        # Unit mismatch
-        return None, None
+        return "Dimension Mismatch", 0
     except ZeroDivisionError:
-        return None, None
-    except TypeError:
-        return None, None
+        return "Zero Division", 0

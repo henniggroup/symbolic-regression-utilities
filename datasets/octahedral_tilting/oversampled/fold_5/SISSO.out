@@ -1,0 +1,73 @@
+Version SISSO.3.0, June, 2019.
+================================================================================
+
+Reading data from train.dat ...
+Reading parameters from SISSO.in: 
+--------------------------------------------------------------------------------
+restarts ?     F
+descriptor dimension:        1
+property type:     2
+total number of properties:        1
+task_weighting:        1
+number of samples for each property:       87
+number of samples for the groups of the property   1:    29   29   29
+is constrained to be convex domain for the groups of property   1:     1    1    1
+boundary tolerance (width) for classification:   0.000100
+number of scalar features:        8
+times of applying the operator set for feature construction (rung of the feature space):        3
+max complexity (number of operators in a feature):       20
+number of dimension(unit)-type (for dimension analysis):        4
+dimension type for each primary feature: 
+  1.00  0.00  0.00  0.00
+  1.00  0.00  0.00  0.00
+  0.00  1.00  0.00  0.00
+  0.00  1.00  0.00  0.00
+  0.00  0.00  1.00  0.00
+  0.00  0.00  1.00  0.00
+  0.00  0.00  0.00  1.00
+  0.00  0.00  0.00  1.00
+lower bound of the max abs. data value for the selected features:     0.10000E-05
+upper bound of the max abs. data value for the selected features:     0.10000E+07
+Expected size of the SIS-selected (single) subspace :     1000
+operator set for feature construction: (+)(-)(*)(/)(^-1)(^2)(^3)(sqrt)(cbrt) 
+method for sparsification:  L0        
+number of the top ranked models to output:     1000
+--------------------------------------------------------------------------------
+
+Feature Construction and Descriptor Identification (FCDI) starts ...
+
+iteration:   1
+--------------------------------------------------------------------------------
+FC starts ...
+Total number of features in the space phi00:              8
+Total number of features in the space phi01:            143
+Total number of features in the space phi02:          11167
+Total number of features in the space phi03:      182387102
+Size of the SIS-selected subspace from phi03:       1000
+Wall-clock time (second) for this FC:           56.20
+FC done!
+
+DI starts ...
+total number of SIS-selected features from all iterations:       1000
+L0 starts ...
+
+Final model/descriptor to report
+================================================================================
+  1D descriptor (model): 
+Number of data in all overlap regions:         0
+Size of the overlap:       -0.89415
+Note: >0, overlap-size; <0, distance (absolute value) between separated domains
+Actual number (without double counting) of data in all overlap regions:          0
+@@@descriptor: 
+                      1:[(((Ra)^2)^3*(sqrt(Ra)/(Rb)^3))]
+================================================================================
+Wall-clock time (second) for this DI:            0.02
+DI done!
+
+FCDI done !
+
+--------------------------------------------------------------------------------
+Total wall-clock time (second):           56.43
+
+                                               Have a nice day !    
+

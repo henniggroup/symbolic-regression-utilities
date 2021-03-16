@@ -1,14 +1,9 @@
 import numpy as np
-from scipy.stats import gaussian_kde
-
 import matplotlib.pyplot as plt
-from matplotlib import cm
-
 import sympy
 from sympy.parsing.sympy_parser import parse_expr
 
 from matplotlib.ticker import MultipleLocator
-# from matplotlib.ticker import MaxNLocator
 
 
 def prettify_fn(fn_string, lsubs=None, simplify=False):
@@ -123,13 +118,12 @@ def round_lims(values, round_factor=0.5):
     return lims, tick_factor
 
 
-def density_scatter(references, predictions,
-                    ax=None, loglog=False, lims=None, lim_factor=0.5,
-                    subset_threshold=10000,
-                    cmap=None, figsize=(3.5, 3.5), dpi=200,
-                    metrics=True, text_size=8,
-                    units=None, labels=True, label_size=8,
-                    **scatter_kwargs):
+def pretty_scatter(references, predictions,
+                   ax=None, loglog=False, lims=None, lim_factor=0.5,
+                   figsize=(3.5, 3.5), dpi=200,
+                   metrics=True, text_size=8,
+                   units=None, labels=True, label_size=8,
+                   **scatter_kwargs):
     """
     Scatter plot of predictions vs. references, colored by density.
 
@@ -150,8 +144,6 @@ def density_scatter(references, predictions,
         fig_tuple = (None, None)
     if 's' not in scatter_kwargs.keys():
         scatter_kwargs['s'] = 1
-    if cmap is None:
-        cmap = cm.viridis
     x = np.array(references)
     y = np.array(predictions)
     xy_stack = np.vstack([x, y])
@@ -162,25 +154,7 @@ def density_scatter(references, predictions,
     rmse = np.sqrt(np.mean(residuals ** 2))
     max_over = np.max(residuals)
     max_under = np.min(residuals)
-    # Randomly select subset for large datasets
-    n_points = len(x)
-    if n_points > subset_threshold:
-        subset_indices = np.random.choice(np.arange(len(x)),
-                                          subset_threshold,
-                                          replace=False)
-        print(x.shape, y.shape)
-        xy_stack = xy_stack[:, subset_indices]
-        x = x[subset_indices]
-        y = y[subset_indices]
-    # Scatter, colored by log density
-    z = gaussian_kde(xy_stack)(xy_stack)
-    z_sort = np.argsort(z)
-    z = z[z_sort]
-    x = x[z_sort]
-    y = y[z_sort]
-    z = np.log(z - np.min(z) + 1)  # ensure valid log domain
-    # colors = np.array([cmap(zi) for zi in z])
-    ax.scatter(x, y, c=z, cmap=cmap, **scatter_kwargs)
+    ax.scatter(x, y,  **scatter_kwargs)
     # Axis scale and limits
     ax.axis('square')
     if loglog is True:
@@ -192,8 +166,6 @@ def density_scatter(references, predictions,
         if lims is None:
             lims, tick_factor = round_lims(np.concatenate([x, y]),
                                            round_factor=lim_factor)
-            # ax.xaxis.set_major_locator(MultipleLocator(tick_factor))
-            # ax.yaxis.set_major_locator(MultipleLocator(tick_factor))
     ax.set_xlim(lims)
     ax.set_ylim(lims)
     ax.plot(lims, lims, color='lightgray', linestyle='--', linewidth=0.5)

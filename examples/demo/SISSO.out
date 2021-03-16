@@ -1,0 +1,68 @@
+Version SISSO.3.0.2, June, 2020.
+================================================================================
+
+Reading data from train.dat ...
+Reading parameters from SISSO.in: 
+--------------------------------------------------------------------------------
+Restarts :     F
+Descriptor dimension:        1
+Property type:     1
+Total number of properties:        1
+Task_weighting:        1
+Number of samples for each property:       29
+Number of scalar features:        3
+Number of recursive calls for feature transformation (rung of the feature space):        3
+Max feature complexity (number of operators in a feature):       10
+Number of dimension(unit)-type (for dimension analysis):        1
+Dimension type for each primary feature: 
+  1.00
+  0.00
+  0.00
+Lower bound of the max abs. data value for the selected features:     0.10000E-05
+Upper bound of the max abs. data value for the selected features:     0.10000E+07
+Size of the SIS-selected (single) subspace :     1000
+Operators for feature construction: (+)(-)(*)(/)(exp)(exp-)(^-1)(^2)(^3)(sqrt)(log) (+)(-)(*)(/)(exp)(exp-)(^-1)(^2)(^3)(sqrt)(log) (+)(-)(*)(/)(exp)(exp-)(^-1)(^2)(^3)(sqrt)(log) 
+Method for sparsification:  L0        
+Number of the top ranked models to output:     1000
+Fitting intercept?      F
+Metric for model selection: RMSE
+--------------------------------------------------------------------------------
+
+Feature Construction and Descriptor Identification (FCDI) starts ...
+
+iteration:   1
+--------------------------------------------------------------------------------
+FC starts ...
+Standard Deviation (SD) of property 001:    2.09101
+Total number of features in the space phi00:              3
+Total number of features in the space phi01:             34
+Total number of features in the space phi02:           1341
+Total number of features in the space phi03:        3412662
+Size of the SIS-selected subspace from phi03:       1000
+Wall-clock time (second) for this FC:            2.70
+FC done!
+
+DI starts ...
+total number of SIS-selected features from all iterations:       1000
+L0 starts ...
+
+Final model/descriptor to report
+================================================================================
+  1D descriptor (model): 
+Total RMSE,MaxAE:   0.251624  0.655874
+@@@descriptor: 
+                     13:[(((lambd)^3*(wlog*lambd))/((lambd)^3+sqrt(mus)))]
+       coefficients_001:     0.9526409654E-01
+          Intercept_001:     0.0000000000E+00
+         RMSE,MaxAE_001:     0.2516242702E+00    0.6558743959E+00
+================================================================================
+Wall-clock time (second) for this DI:            0.02
+DI done!
+
+FCDI done !
+
+--------------------------------------------------------------------------------
+Total wall-clock time (second):            2.91
+
+                                               Have a nice day !    
+

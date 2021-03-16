@@ -1,11 +1,16 @@
 import unittest
-from dimensional_analysis import check_dimensionality
-from parsing import create_train_dat
-from parsing import create_sisso_input
-from parsing import read_train_dat
-from parsing import read_features
-from parsing import read_models
-from parsing import read_coefficients
+import os
+import sissotools
+from sissotools.dimensional_analysis import check_dimensionality
+from sissotools.io import create_tsv
+from sissotools.io import create_sisso_input
+from sissotools.io import read_tsv
+from sissotools.io import read_features
+from sissotools.io import read_models
+from sissotools.io import read_coefficients
+
+root = os.path.dirname(os.path.dirname(os.path.dirname(sissotools.__file__)))
+DATA_PATH = os.path.join(root, "datasets/AllenDynes")
 
 
 class TestDimensionalAnalysis(unittest.TestCase):
@@ -45,25 +50,28 @@ class TestParsing(unittest.TestCase):
         text = create_sisso_input(dict(nsample=1,
                                        nsf=1,
                                        dimclass="(1:1)"))
-        assert len(text) == 599
+        assert len(text) == 621
 
     def test_read_write_traindat(self):
-        df = read_train_dat("./datasets/AllenDynes/train.dat")
+        fname = os.path.join(DATA_PATH, "train.dat")
+        df = read_tsv(fname)
         assert list(df.columns) == ["t_c", "wlog", "lambd", "mu"]
-        text = create_train_dat(df)
+        text = create_tsv(df)
         assert len(text) == 1379
 
     def test_read_features(self):
-        df = read_features("./datasets/AllenDynes/feature_space/Uspace.name")
+        fname = os.path.join(DATA_PATH, "feature_space/Uspace.name")
+        df = read_features(fname)
         assert list(df.columns) == ['Feature', 'Correlation']
 
     def test_read_models(self):
-        df = read_models("./datasets/AllenDynes/models/top9999_001d")
+        fname = os.path.join(DATA_PATH, "models/top9999_001d")
+        df = read_models(fname)
         assert list(df.columns) == ['rmse', 'mae', 'feature id']
 
     def test_read_coef(self):
-        filename = "./datasets/AllenDynes/models/top9999_001d_coeff"
-        df = read_coefficients(filename)
+        fname = os.path.join(DATA_PATH, "models/top9999_001d_coeff")
+        df = read_coefficients(fname)
         assert list(df.columns) == ['intercept', 'slope']
 
 

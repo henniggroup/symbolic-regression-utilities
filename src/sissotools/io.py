@@ -1,3 +1,4 @@
+import os
 import re
 import numpy as np
 import pandas as pd
@@ -22,7 +23,8 @@ SO_DEFAULT = dict(method='L0',
                   metric='RMSE',
                   isconvex="(1, 1)",
                   width=0.001,
-                  nm_output=10000)
+                  nm_output=10000,
+                  L1_weighted=False)
 
 
 def create_sisso_input(parameters, filename=None):
@@ -62,7 +64,7 @@ def create_sisso_input(parameters, filename=None):
         return input_text
 
 
-def create_train_dat(df, filename=None):
+def create_tsv(df, filename=None):
     """Convert pandas DataFrame to text-based table for SISSO.
 
     Args:
@@ -84,7 +86,7 @@ def create_train_dat(df, filename=None):
         return table
 
 
-def read_train_dat(filename):
+def read_tsv(filename):
     """Read text-based table into pandas DataFrame.
 
     Args:
@@ -119,6 +121,7 @@ def read_features(path):
     feature_df = pd.DataFrame(index=index, 
                               data=feature_tuples, 
                               columns=columns)
+    feature_df = feature_df.dropna()
     feature_df['Correlation'] = pd.to_numeric(feature_df['Correlation'])
     return feature_df
 
@@ -145,6 +148,7 @@ def read_models(path):
                            header=0,
                            names=columns)
     del model_df['_']  # TODO: better handling of this SISSO formatting
+    model_df = model_df.dropna()
     model_df['feature id'] = model_df['feature id'].apply(clean_func)
     model_df = model_df.apply(pd.to_numeric)
     return model_df
@@ -167,5 +171,47 @@ def read_coefficients(path):
                            index_col=0,
                            header=0, 
                            names=columns)
+    coeff_df = coeff_df.dropna()
     coeff_df = coeff_df.apply(pd.to_numeric)
     return coeff_df
+
+
+def parse_sisso_run(path,
+                    dim="001",
+                    re_pattern="top([^_]+)_([0-9]+)d"):
+    """
+    Pipeline function for parsing SISSO outputs from directory.
+
+    Args:
+        path (str): Path to run directory.
+        dim (str): identifier for SISSO dimensionality, e.g. "001" for S=1.
+        re_pattern (str): regular expression for SISSO files yielding
+            (identifier, dim), e.g. top0100_001d becomes ("0100", "001")
+
+    Returns:
+        df_features, df_models, df_coef, df_val
+    """
+    feature_fn = 'feature_space/Uspace.name'
+    feature_fpath = os.path.join(path, feature_fn)
+    models_dir = os.path.join(path, 'models')
+    model_files = "\n".join(os.listdir(models_dir))
+    patterns = set(re.compile(re_pattern).findall(model_files))
+    assert any([s[1] == dim for s in patterns]), \
+        "Desired dimension is not present: \"{}\"".format(dim)
+    identifier = sorted([s[0] for s in patterns],
+                        key=lambda x: x.replace('*', '9')).pop()
+    models_fn = 'top{}_{}d'.format(identifier, dim)
+    models_fpath = os.path.join(models_dir, models_fn)
+    coef_fn = 'top{}_{}d_coeff'.format(identifier, dim)
+    coef_fpath = os.path.join(models_dir, coef_fn)
+
+    df_features = read_features(feature_fpath)
+    df_models = read_models(models_fpath)
+    df_coef = read_coefficients(coef_fpath)
+
+    fname_val = os.path.join(path, 'predict.dat')
+    if os.path.isfile(fname_val):
+        df_val = read_tsv(fname_val)
+    else:
+        df_val = None
+    return df_features, df_models, df_coef, df_val

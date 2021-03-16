@@ -1,0 +1,25 @@
+!>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+ptype = 1
+ntask = 1
+nsample = 29
+task_weighting = 1
+desc_dim = 1
+restart = .false.
+!>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+nsf = 3
+rung = 3
+maxcomplexity = 10
+opset = '(+)(-)(*)(/)(exp)(exp-)(^-1)(^2)(^3)(sqrt)(log)'
+dimclass = (1:1)
+maxfval_lb = 1e-6
+maxfval_ub = 1e6
+subs_sis = 1000
+!>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+method = L0
+fit_intercept = .false.
+L1L0_size4L0 = 1
+metric = RMSE
+isconvex = (1, 1)
+width = 0.001
+nm_output = 1000
+L1_weighted = .false.
